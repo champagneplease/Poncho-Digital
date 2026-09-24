@@ -24,7 +24,7 @@ model Producto {
   nombre      String
   precio      Float
   artesanoId  Int
-  artesano    Artesano @relation(fields: [artesanoId], references: [id])
+  artesano    Artesano @relation(fields: [artesanoId], references: [id], onDelete: Cascade)
 }
 
 model Stand {
@@ -34,5 +34,4 @@ model Stand {
   estado      String    @default("disponible") 
   coordenadas String    
   artesanoId  Int?      @unique
-  artesano    Artesano? @relation(fields: [artesanoId], references: [id])
-}
+  artesano    Artesano? @relation(fields: [artesanoId], references: [id], onDelete: SetNull)

@@ -14,7 +14,7 @@ app.use(express.json());
 // Registramos los endpoints principales
 app.use('/api/productos', productosRoutes);
 app.use('/api/stands', standsRoutes);       
-app.use('/api/artesanos', artesanosRoutes); 
+app.use('/api/artesanos', artesanosRoutes);
 
 // Middleware centralizado de errores
 app.use((err, req, res, next) => {

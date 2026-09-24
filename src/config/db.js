@@ -7,15 +7,15 @@ import dotenv from 'dotenv';
 
 dotenv.config(); // Carga las variables de entorno
 
-// 1. Creamos el "Pool" de conexiones nativo de PostgreSQL
+// Creamos el "Pool" de conexiones nativo de PostgreSQL
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL
 });
 
-// 2. Le pasamos ese pool al adaptador de Prisma
+// Le pasamos ese pool al adaptador de Prisma
 const adapter = new PrismaPg(pool);
 
-// 3. Inicializamos Prisma usando el adaptador
+// Inicializamos Prisma usando el adaptador
 const prisma = new PrismaClient({ adapter });
 
 export default prisma;
