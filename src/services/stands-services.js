@@ -1,40 +1,53 @@
-import prisma from '../config/db.js';
+import { prisma } from '../config/db.js';
 
-// Leer todos los stands (sin filtros)
-export const obtenerStands = async () => {
-  return await prisma.stand.findMany();
-};
+export const getAllStands = async (queryParams) => {
+  const page = parseInt(queryParams.page) || 1;
+  const limit = parseInt(queryParams.limit) || 10;
+  const skip = (page - 1) * limit;
 
-// Leer un stand específico por ID
-export const obtenerStandPorId = async (id) => {
-  return await prisma.stand.findUnique({
-    where: { id: parseInt(id) }
-  });
-};
+  const { estado, pabellon, localidad } = queryParams;
+  const where = {};
+  
+  if (estado) where.estado = estado; 
+  if (pabellon) where.ubicacion = { pabellon: pabellon };
+  if (localidad) {
+    where.artesano = {
+      localidad: { nombre: { contains: localidad, mode: 'insensitive' } }
+    };
+  }
 
-// Crear un nuevo stand
-export const crearStand = async (data) => {
-  return await prisma.stand.create({
-    data: {
-      pabellon: data.pabellon,
-      sector: data.sector,
-      estado: data.estado || 'disponible',
-      coordenadas: data.coordenadas
+  const stands = await prisma.stand.findMany({
+    where, skip, take: limit,
+    include: {
+      ubicacion: true,
+      artesano: { include: { localidad: true } }
     }
   });
+
+  const totalRegistros = await prisma.stand.count({ where });
+
+  return {
+    data: stands,
+    meta: {
+      total: totalRegistros,
+      paginaActual: page,
+      limite: limit,
+      totalPaginas: Math.ceil(totalRegistros / limit)
+    }
+  };
 };
 
-// Actualizar un stand existente
-export const actualizarStand = async (id, data) => {
+export const createStand = async (data) => {
+  return await prisma.stand.create({ data });
+};
+
+export const updateStand = async (id, data) => {
   return await prisma.stand.update({
-    where: { id: parseInt(id) },
-    data: data
+    where: { id },
+    data
   });
 };
 
-// Eliminar un stand
-export const eliminarStand = async (id) => {
-  return await prisma.stand.delete({
-    where: { id: parseInt(id) }
-  });
+export const deleteStand = async (id) => {
+  return await prisma.stand.delete({ where: { id } });
 };

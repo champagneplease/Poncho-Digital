@@ -1,20 +1,13 @@
 import { Router } from 'express';
-import {
-  getArtesanos,
-  getArtesanoById,
-  createArtesano,
-  updateArtesano,
-  deleteArtesano
-} from '../controllers/artesanos-controllers.js';
-import { validarArtesano } from '../middlewares/artesano-validator.js';
+import { getArtesanos, createArtesano, updateArtesano, deleteArtesano } from '../controllers/artesanos-controllers.js';
+import { validateSchema } from '../middlewares/zod-validator.js';
+import { artesanoSchema } from '../schemas/validations.js';
 
 const router = Router();
 
-// Endpoints CRUD para /api/artesanos
 router.get('/', getArtesanos);
-router.get('/:id', getArtesanoById);
-router.post('/', validarArtesano, createArtesano);
-router.put('/:id', updateArtesano);
+router.post('/', validateSchema(artesanoSchema), createArtesano);
+router.put('/:id', validateSchema(artesanoSchema.partial()), updateArtesano);
 router.delete('/:id', deleteArtesano);
 
 export default router;

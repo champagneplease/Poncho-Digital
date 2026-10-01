@@ -1,19 +1,14 @@
 import { Router } from 'express';
-import {
-  getStands,
-  getStandById,
-  createStand,
-  updateStand,
-  deleteStand
-} from '../controllers/stands-controllers.js';
+import { getStands, createStand, updateStand, deleteStand } from '../controllers/stands-controllers.js';
+import { validateSchema } from '../middlewares/zod-validator.js';
+import { standSchema } from '../schemas/validations.js';
 
 const router = Router();
 
-// Endpoints CRUD para /api/stands
-router.get('/', getStands);             // Leer todos
-router.get('/:id', getStandById);       // Leer uno
-router.post('/', createStand);          // Crear
-router.put('/:id', updateStand);        // Actualizar
-router.delete('/:id', deleteStand);     // Eliminar
+router.get('/', getStands);
+router.post('/', validateSchema(standSchema), createStand);
+// Usamos .partial() para que Zod permita actualizar solo algunos campos sin requerir todos
+router.put('/:id', validateSchema(standSchema.partial()), updateStand);
+router.delete('/:id', deleteStand);
 
 export default router;

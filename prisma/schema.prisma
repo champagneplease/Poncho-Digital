@@ -11,12 +11,31 @@ datasource db {
   provider = "postgresql"
 }
 
+model Localidad {
+  id        Int        @id @default(autoincrement())
+  nombre    String
+  provincia String?
+  artesanos Artesano[]
+}
+
+model Ubicacion {
+  id       Int     @id @default(autoincrement())
+  pabellon String
+  sector   String
+  stands   Stand[]
+}
+
 model Artesano {
   id          Int        @id @default(autoincrement())
   nombre      String
-  localidad   String
+  apellido    String
+  telefono    String?
+  
+  localidadId Int
+  localidad   Localidad  @relation(fields: [localidadId], references: [id])
+  
   productos   Producto[]
-  stand       Stand?     
+  stand       Stand?
 }
 
 model Producto {
@@ -28,10 +47,12 @@ model Producto {
 }
 
 model Stand {
-  id          Int       @id @default(autoincrement())
-  pabellon    String
-  sector      String
-  estado      String    @default("disponible") 
-  coordenadas String    
-  artesanoId  Int?      @unique
-  artesano    Artesano? @relation(fields: [artesanoId], references: [id], onDelete: SetNull)
+  id          Int        @id @default(autoincrement())
+  estado      String     @default("disponible")    
+  
+  ubicacionId Int
+  ubicacion   Ubicacion  @relation(fields: [ubicacionId], references: [id])
+  
+  artesanoId  Int?       @unique
+  artesano    Artesano?  @relation(fields: [artesanoId], references: [id], onDelete: SetNull)
+}

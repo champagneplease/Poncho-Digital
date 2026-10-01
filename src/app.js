@@ -1,29 +1,36 @@
-import express from 'express';
+
 import dotenv from 'dotenv';
-import productosRoutes from './routes/productos-routes.js';
+dotenv.config();
+import express from 'express';
+
+
+// Importación de todas las rutas
 import standsRoutes from './routes/stands-routes.js';
 import artesanosRoutes from './routes/artesanos-routes.js';
-
-dotenv.config();
+import productosRoutes from './routes/productos-routes.js';
+import localidadesRoutes from './routes/localidades-routes.js';
+import ubicacionesRoutes from './routes/ubicaciones-routes.js';
 
 const app = express();
 
-// Middleware para que Express entienda el formato JSON
-app.use(express.json());
+// --- Middlewares Globales ---
+app.use(express.json()); 
 
-// Registramos los endpoints principales
-app.use('/api/productos', productosRoutes);
-app.use('/api/stands', standsRoutes);       
-app.use('/api/artesanos', artesanosRoutes);
+// --- Rutas de la API ---
+app.use('/stands', standsRoutes);
+app.use('/artesanos', artesanosRoutes);
+app.use('/productos', productosRoutes);
+app.use('/localidades', localidadesRoutes);
+app.use('/ubicaciones', ubicacionesRoutes);
 
-// Middleware centralizado de errores
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Ocurrió un error interno en el servidor' });
+// --- Manejo de rutas inexistentes (404) ---
+app.use((req, res) => {
+  res.status(404).json({ error: "Ruta no encontrada" });
 });
 
+// --- Configuración del Puerto y Arranque del Servidor ---
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`Servidor ejecutándose en el puerto ${PORT}`);
+  console.log(` Servidor de Poncho Digital corriendo en http://localhost:${PORT}`);
 });

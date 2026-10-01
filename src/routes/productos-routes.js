@@ -1,10 +1,13 @@
 import { Router } from 'express';
-import { getProductos, createProducto } from '../controllers/productos-controllers.js';
+import { getProductos, createProducto, updateProducto, deleteProducto } from '../controllers/productos-controllers.js';
+import { validateSchema } from '../middlewares/zod-validator.js';
+import { productoSchema } from '../schemas/validations.js';
 
 const router = Router();
 
-// Endpoint: /api/productos
 router.get('/', getProductos);
-router.post('/', createProducto);
+router.post('/', validateSchema(productoSchema), createProducto);
+router.put('/:id', validateSchema(productoSchema.partial()), updateProducto);
+router.delete('/:id', deleteProducto);
 
 export default router;

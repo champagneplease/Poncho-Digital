@@ -1,52 +1,39 @@
-import * as artesanosService from '../services/artesanos-services.js';
+import * as artesanoService from '../services/artesanos-services.js';
 
-export const getArtesanos = async (req, res, next) => {
+export const getArtesanos = async (req, res) => {
   try {
-    const artesanos = await artesanosService.obtenerArtesanos();
-    res.status(200).json(artesanos);
+    const artesanos = await artesanoService.getAllArtesanos();
+    res.json(artesanos);
   } catch (error) {
-    next(error);
+    res.status(500).json({ error: "Error al obtener artesanos" });
   }
 };
 
-export const getArtesanoById = async (req, res, next) => {
+export const createArtesano = async (req, res) => {
   try {
-    const artesano = await artesanosService.obtenerArtesanoPorId(req.params.id);
-    if (!artesano) {
-      return res.status(404).json({ error: "Artesano no encontrado" });
-    }
-    res.status(200).json(artesano);
+    const newArtesano = await artesanoService.createArtesano(req.body);
+    res.status(201).json(newArtesano);
   } catch (error) {
-    next(error);
+    res.status(500).json({ error: "Error al crear el artesano" });
   }
 };
 
-export const createArtesano = async (req, res, next) => {
+export const updateArtesano = async (req, res) => {
   try {
-    const nuevoArtesano = await artesanosService.crearArtesano(req.body);
-    res.status(201).json(nuevoArtesano);
+    const id = parseInt(req.params.id);
+    const updatedArtesano = await artesanoService.updateArtesano(id, req.body);
+    res.json(updatedArtesano);
   } catch (error) {
-    if (error.message === 'Ya existe un artesano con este nombre') {
-      return res.status(400).json({ error: error.message });
-    }
-    next(error);
+    res.status(500).json({ error: "Error al actualizar el artesano o no existe" });
   }
 };
 
-export const updateArtesano = async (req, res, next) => {
+export const deleteArtesano = async (req, res) => {
   try {
-    const artesanoActualizado = await artesanosService.actualizarArtesano(req.params.id, req.body);
-    res.status(200).json(artesanoActualizado);
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const deleteArtesano = async (req, res, next) => {
-  try {
-    await artesanosService.eliminarArtesano(req.params.id);
+    const id = parseInt(req.params.id);
+    await artesanoService.deleteArtesano(id);
     res.status(204).send();
   } catch (error) {
-    next(error);
+    res.status(500).json({ error: "Error al eliminar el artesano o no existe" });
   }
 };

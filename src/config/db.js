@@ -1,21 +1,11 @@
-import { Pool } from 'pg';
+import 'dotenv/config';
+import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const { PrismaClient } = require('@prisma/client');
-import dotenv from 'dotenv';
+import pg from 'pg';
 
-dotenv.config(); // Carga las variables de entorno
+const connectionString = process.env.DATABASE_URL;
 
-// Creamos el "Pool" de conexiones nativo de PostgreSQL
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL
-});
-
-// Le pasamos ese pool al adaptador de Prisma
+const pool = new pg.Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 
-// Inicializamos Prisma usando el adaptador
-const prisma = new PrismaClient({ adapter });
-
-export default prisma;
+export const prisma = new PrismaClient({ adapter });

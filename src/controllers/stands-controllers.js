@@ -1,49 +1,39 @@
-import * as standsService from '../services/stands-services.js';
+import * as standService from '../services/stands-services.js';
 
-export const getStands = async (req, res, next) => {
+export const getStands = async (req, res) => {
   try {
-    const stands = await standsService.obtenerStands();
-    res.status(200).json(stands);
+    const result = await standService.getAllStands(req.query);
+    res.json(result);
   } catch (error) {
-    next(error);
+    res.status(500).json({ error: "Error al obtener los stands" });
   }
 };
 
-export const getStandById = async (req, res, next) => {
+export const createStand = async (req, res) => {
   try {
-    const stand = await standsService.obtenerStandPorId(req.params.id);
-    if (!stand) {
-      return res.status(404).json({ error: "Stand no encontrado" });
-    }
-    res.status(200).json(stand);
+    const newStand = await standService.createStand(req.body);
+    res.status(201).json(newStand);
   } catch (error) {
-    next(error);
+    res.status(500).json({ error: "Error al crear el stand" });
   }
 };
 
-export const createStand = async (req, res, next) => {
+export const updateStand = async (req, res) => {
   try {
-    const nuevoStand = await standsService.crearStand(req.body);
-    res.status(201).json(nuevoStand);
+    const id = parseInt(req.params.id);
+    const updatedStand = await standService.updateStand(id, req.body);
+    res.json(updatedStand);
   } catch (error) {
-    next(error);
+    res.status(500).json({ error: "Error al actualizar el stand o no existe" });
   }
 };
 
-export const updateStand = async (req, res, next) => {
+export const deleteStand = async (req, res) => {
   try {
-    const standActualizado = await standsService.actualizarStand(req.params.id, req.body);
-    res.status(200).json(standActualizado);
+    const id = parseInt(req.params.id);
+    await standService.deleteStand(id);
+    res.status(204).send();
   } catch (error) {
-    next(error);
-  }
-};
-
-export const deleteStand = async (req, res, next) => {
-  try {
-    await standsService.eliminarStand(req.params.id);
-    res.status(204).send(); // 204 significa "No Content", éxito al eliminar
-  } catch (error) {
-    next(error);
+    res.status(500).json({ error: "Error al eliminar el stand o no existe" });
   }
 };

@@ -1,23 +1,22 @@
-import prisma from '../config/db.js';
+import { prisma } from '../config/db.js';
 
-export const obtenerTodosLosProductos = async () => {
+export const getAllProductos = async () => {
   return await prisma.producto.findMany({
     include: { artesano: true }
   });
 };
 
-export const crearNuevoProducto = async (data) => {
-  return await prisma.producto.create({
-    data: {
-      nombre: data.nombre,
-      precio: parseFloat(data.precio),
-      artesanoId: parseInt(data.artesanoId)
-    }
+export const createProducto = async (data) => {
+  return await prisma.producto.create({ data });
+};
+
+export const updateProducto = async (id, data) => {
+  return await prisma.producto.update({
+    where: { id },
+    data
   });
 };
 
-
-
-
-
-
+export const deleteProducto = async (id) => {
+  return await prisma.producto.delete({ where: { id } });
+};
