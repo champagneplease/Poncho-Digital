@@ -24,6 +24,9 @@ export const updateStand = async (req, res) => {
     const updatedStand = await standService.updateStand(id, req.body);
     res.json(updatedStand);
   } catch (error) {
+    if (error.message.includes("El artesano debe estar APROBADO") || error.message.includes("El artesano no existe")) {
+      return res.status(400).json({ error: error.message });
+    }
     res.status(500).json({ error: "Error al actualizar el stand o no existe" });
   }
 };

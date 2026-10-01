@@ -13,6 +13,8 @@ datasource db {
 
 model Localidad {
   id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   nombre    String
   provincia String?
   artesanos Artesano[]
@@ -20,6 +22,8 @@ model Localidad {
 
 model Ubicacion {
   id       Int     @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   pabellon String
   sector   String
   stands   Stand[]
@@ -27,9 +31,12 @@ model Ubicacion {
 
 model Artesano {
   id          Int        @id @default(autoincrement())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
   nombre      String
   apellido    String
   telefono    String?
+  estado      String     @default("PENDIENTE")
   
   localidadId Int
   localidad   Localidad  @relation(fields: [localidadId], references: [id])
@@ -40,6 +47,8 @@ model Artesano {
 
 model Producto {
   id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   nombre      String
   precio      Float
   artesanoId  Int
@@ -48,7 +57,10 @@ model Producto {
 
 model Stand {
   id          Int        @id @default(autoincrement())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
   estado      String     @default("disponible")    
+  coordenadas String?
   
   ubicacionId Int
   ubicacion   Ubicacion  @relation(fields: [ubicacionId], references: [id])

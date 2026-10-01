@@ -49,7 +49,7 @@ Antes de ejecutar el proyecto, asegúrese de contar con los siguientes requerimi
    ```bash
    cp .env.example .env
    ```
-   
+
    A continuación, edite el archivo `.env` recién creado y actualice la variable `DATABASE_URL` con sus credenciales correspondientes de PostgreSQL.
 
 4. **Configuración de la Base de Datos (Prisma):**

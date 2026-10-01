@@ -9,6 +9,5 @@ export const validarArtesano = (req, res, next) => {
     return res.status(400).json({ error: 'La localidad es obligatoria y debe ser un texto válido.' });
   }
 
-  // Si todo está bien, continuamos con el controlador
   next();
 };

@@ -37,3 +37,19 @@ export const deleteArtesano = async (req, res) => {
     res.status(500).json({ error: "Error al eliminar el artesano o no existe" });
   }
 };
+
+export const updateArtesanoEstado = async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const { estado } = req.body;
+    
+    if (!["PENDIENTE", "APROBADO", "RECHAZADO"].includes(estado)) {
+      return res.status(400).json({ error: "Estado inválido. Debe ser PENDIENTE, APROBADO o RECHAZADO." });
+    }
+    
+    const updatedArtesano = await artesanoService.updateArtesanoEstado(id, estado);
+    res.json(updatedArtesano);
+  } catch (error) {
+    res.status(500).json({ error: "Error al actualizar el estado del artesano" });
+  }
+};

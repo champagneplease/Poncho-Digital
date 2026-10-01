@@ -9,6 +9,19 @@ export const getProductos = async (req, res) => {
   }
 };
 
+export const getProductoById = async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const producto = await productoService.getProductoById(id);
+    if (!producto) {
+      return res.status(404).json({ error: "Producto no encontrado" });
+    }
+    res.status(200).json(producto);
+  } catch (error) {
+    res.status(500).json({ error: "Error al obtener producto" });
+  }
+};
+
 export const createProducto = async (req, res) => {
   try {
     const newProducto = await productoService.createProducto(req.body);
@@ -36,4 +49,4 @@ export const deleteProducto = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Error al eliminar el producto o no existe" });
   }
-};
+}

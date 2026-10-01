@@ -20,3 +20,10 @@ export const updateArtesano = async (id, data) => {
 export const deleteArtesano = async (id) => {
   return await prisma.artesano.delete({ where: { id } });
 };
+
+export const updateArtesanoEstado = async (id, estado) => {
+  return await prisma.artesano.update({
+    where: { id },
+    data: { estado }
+  });
+};

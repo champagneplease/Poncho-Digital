@@ -14,6 +14,7 @@ export const artesanoSchema = z.object({
   nombre: z.string().min(2, "El nombre es obligatorio"),
   apellido: z.string().min(2, "El apellido es obligatorio"),
   telefono: z.string().optional(),
+  estado: z.enum(["PENDIENTE", "APROBADO", "RECHAZADO"]).optional(),
   localidadId: z.number().int().positive("Debe incluir un ID de localidad válido")
 });
 
