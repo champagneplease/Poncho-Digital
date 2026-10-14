@@ -26,33 +26,41 @@ model Ubicacion {
 }
 
 model Artesano {
-  id          Int        @id @default(autoincrement())
-  nombre      String
-  apellido    String
-  telefono    String?
+  id           String     @id @default(uuid()) @db.Uuid
+  nombre       String
+  apellido     String?
+  telefono     String?
+  localidadId  Int?
+  localidad    Localidad? @relation(fields: [localidadId], references: [id])
+  productos    Producto[]
+  stand        Stand?
   
-  localidadId Int
-  localidad   Localidad  @relation(fields: [localidadId], references: [id])
-  
-  productos   Producto[]
-  stand       Stand?
+  // --- Autenticación ---
+  email        String     @unique
+  passwordHash String
+  activo       Boolean    @default(true)
+  ultimoAcceso DateTime?
 }
 
 model Producto {
   id          Int      @id @default(autoincrement())
   nombre      String
   precio      Float
-  artesanoId  Int
-  artesano    Artesano @relation(fields: [artesanoId], references: [id], onDelete: Cascade)
+  artesanoId  String?  @db.Uuid // <-- Cambia a String
+  artesano    Artesano? @relation(fields: [artesanoId], references: [id])
 }
 
 model Stand {
   id          Int        @id @default(autoincrement())
-  estado      String     @default("disponible")    
-  
+  estado      String     @default("disponible")
   ubicacionId Int
   ubicacion   Ubicacion  @relation(fields: [ubicacionId], references: [id])
-  
-  artesanoId  Int?       @unique
-  artesano    Artesano?  @relation(fields: [artesanoId], references: [id], onDelete: SetNull)
+  artesanoId  String?    @unique @db.Uuid // <-- Cambia a String
+  artesano    Artesano?  @relation(fields: [artesanoId], references: [id])
+}
+
+model TokenRevocado {
+  jti     String   @id
+  venceEn DateTime
+  @@index([venceEn])
 }

@@ -7,7 +7,6 @@ const router = Router();
 
 router.get('/', getStands);
 router.post('/', validateSchema(standSchema), createStand);
-// Usamos .partial() para que Zod permita actualizar solo algunos campos sin requerir todos
 router.put('/:id', validateSchema(standSchema.partial()), updateStand);
 router.delete('/:id', deleteStand);
 

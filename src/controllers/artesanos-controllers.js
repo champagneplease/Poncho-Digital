@@ -8,6 +8,15 @@ export const getArtesanos = async (req, res) => {
     res.status(500).json({ error: "Error al obtener artesanos" });
   }
 };
+export const getArtesanoById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const artesano = await artesanosService.getArtesanoById(id);
+    res.json(artesano);
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const createArtesano = async (req, res) => {
   try {

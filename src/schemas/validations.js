@@ -20,7 +20,7 @@ export const artesanoSchema = z.object({
 export const productoSchema = z.object({
   nombre: z.string().min(2, "El nombre del producto es obligatorio"),
   precio: z.number().positive("El precio debe ser mayor a 0"),
-  artesanoId: z.number().int().positive("Debe pertenecer a un artesano válido")
+  artesanoId: z.number().int().positive().optional("Debe pertenecer a un artesano válido")
 });
 
 export const standSchema = z.object({
