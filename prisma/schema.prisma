@@ -46,7 +46,7 @@ model Producto {
   id          Int      @id @default(autoincrement())
   nombre      String
   precio      Float
-  artesanoId  String?  @db.Uuid // <-- Cambia a String
+  artesanoId  String?  @db.Uuid 
   artesano    Artesano? @relation(fields: [artesanoId], references: [id])
 }
 
@@ -55,7 +55,7 @@ model Stand {
   estado      String     @default("disponible")
   ubicacionId Int
   ubicacion   Ubicacion  @relation(fields: [ubicacionId], references: [id])
-  artesanoId  String?    @unique @db.Uuid // <-- Cambia a String
+  artesanoId  String?    @unique @db.Uuid 
   artesano    Artesano?  @relation(fields: [artesanoId], references: [id])
 }
 
