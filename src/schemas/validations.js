@@ -15,17 +15,17 @@ export const artesanoSchema = z.object({
   apellido: z.string().min(2, "El apellido es obligatorio"),
   telefono: z.string().optional(),
   estado: z.enum(["PENDIENTE", "APROBADO", "RECHAZADO"]).optional(),
-  localidadId: z.number().int().positive("Debe incluir un ID de localidad válido")
+  localidadId: z.number().int().positive("Debe incluir un ID de localidad válido").optional()
 });
 
 export const productoSchema = z.object({
   nombre: z.string().min(2, "El nombre del producto es obligatorio"),
   precio: z.number().positive("El precio debe ser mayor a 0"),
-  artesanoId: z.number().int().positive("Debe pertenecer a un artesano válido")
+  artesanoId: z.union([z.string().uuid(), z.number().int().positive()]).optional()
 });
 
 export const standSchema = z.object({
   estado: z.string().optional(),
   ubicacionId: z.number().int().positive("Debe incluir un ID de ubicación válido"),
-  artesanoId: z.number().int().positive().optional()
+  artesanoId: z.union([z.string().uuid(), z.number().int().positive()]).nullable().optional()
 });

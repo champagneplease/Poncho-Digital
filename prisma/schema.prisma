@@ -21,38 +21,42 @@ model Localidad {
 }
 
 model Ubicacion {
-  id       Int     @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  pabellon String
-  sector   String
-  stands   Stand[]
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  pabellon  String
+  sector    String
+  stands    Stand[]
 }
 
 model Artesano {
-  id          Int        @id @default(autoincrement())
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  nombre      String
-  apellido    String
-  telefono    String?
-  estado      String     @default("PENDIENTE")
+  id           String     @id @default(uuid()) @db.Uuid
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  nombre       String
+  apellido     String?
+  telefono     String?
+  estado       String     @default("PENDIENTE")
+  localidadId  Int?
+  localidad    Localidad? @relation(fields: [localidadId], references: [id])
+  productos    Producto[]
+  stand        Stand?
   
-  localidadId Int
-  localidad   Localidad  @relation(fields: [localidadId], references: [id])
-  
-  productos   Producto[]
-  stand       Stand?
+  // --- Autenticación ---
+  email        String     @unique
+  passwordHash String
+  activo       Boolean    @default(true)
+  ultimoAcceso DateTime?
 }
 
 model Producto {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   nombre      String
   precio      Float
-  artesanoId  Int
-  artesano    Artesano @relation(fields: [artesanoId], references: [id], onDelete: Cascade)
+  artesanoId  String?   @db.Uuid 
+  artesano    Artesano? @relation(fields: [artesanoId], references: [id])
 }
 
 model Stand {
@@ -65,6 +69,12 @@ model Stand {
   ubicacionId Int
   ubicacion   Ubicacion  @relation(fields: [ubicacionId], references: [id])
   
-  artesanoId  Int?       @unique
+  artesanoId  String?    @unique @db.Uuid
   artesano    Artesano?  @relation(fields: [artesanoId], references: [id], onDelete: SetNull)
+}
+
+model TokenRevocado {
+  jti     String   @id
+  venceEn DateTime
+  @@index([venceEn])
 }

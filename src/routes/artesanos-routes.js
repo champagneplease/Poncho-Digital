@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getArtesanos, createArtesano, updateArtesano, updateArtesanoEstado, deleteArtesano } from '../controllers/artesanos-controllers.js';
+import { getArtesanos, getArtesanoById, createArtesano, updateArtesano, updateArtesanoEstado, deleteArtesano } from '../controllers/artesanos-controllers.js';
 import { validateSchema } from '../middlewares/zod-validator.js';
 import { requireApiKey } from '../middlewares/auth-validator.js';
 import { artesanoSchema } from '../schemas/validations.js';
@@ -7,6 +7,7 @@ import { artesanoSchema } from '../schemas/validations.js';
 const router = Router();
 
 router.get('/', getArtesanos);
+router.get('/:id', getArtesanoById);
 // Protected endpoints
 router.post('/', requireApiKey, validateSchema(artesanoSchema), createArtesano);
 router.put('/:id', requireApiKey, validateSchema(artesanoSchema.partial()), updateArtesano);

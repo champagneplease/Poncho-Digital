@@ -6,6 +6,13 @@ export const getAllArtesanos = async () => {
   });
 };
 
+export const getArtesanoById = async (id) => {
+  return await prisma.artesano.findUnique({
+    where: { id },
+    include: { localidad: true, stand: true, productos: true }
+  });
+};
+
 export const createArtesano = async (data) => {
   return await prisma.artesano.create({ data });
 };
