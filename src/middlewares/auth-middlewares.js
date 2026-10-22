@@ -2,21 +2,7 @@ import jwt from "jsonwebtoken";
 import { verificarToken } from "../services/tokens-services.js";
 import { tokenEstaRevocado } from "../services/revocaciones-services.js";
 
-export const validarEsquema = (schema) => (req, res, next) => {
-  try {
-    const resultado = schema.safeParse(req.body);
-    if (!resultado.success) {
-      return res.status(400).json({
-        mensaje: "Los datos enviados son inválidos.",
-        errores: resultado.error.issues
-      });
-    }
-    req.dtoValidado = resultado.data;
-    return next();
-  } catch (err) {
-    return next(err); // Pasa el error al manejador centralizado
-  }
-};
+export { validateSchema, validarEsquema } from "./zod-validator.js";
 
 export const autenticarArtesano = async (req, res, next) => {
   const encabezado = req.get("Authorization");

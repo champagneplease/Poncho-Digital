@@ -13,3 +13,12 @@ export const revocarToken = async ({ jti, exp }) => {
     update: { venceEn: venceEn }
   });
 };
+
+export const eliminarTokensVencidos = async () => {
+  const resultado = await prisma.tokenRevocado.deleteMany({
+    where: {
+      venceEn: { lt: new Date() }
+    }
+  });
+  return resultado.count;
+};

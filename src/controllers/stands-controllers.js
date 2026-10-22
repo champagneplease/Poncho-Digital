@@ -1,42 +1,45 @@
 import * as standService from '../services/stands-services.js';
 
-export const getStands = async (req, res) => {
+export const getStands = async (req, res, next) => {
   try {
     const result = await standService.getAllStands(req.query);
     res.json(result);
   } catch (error) {
-    res.status(500).json({ error: "Error al obtener los stands" });
+    next(error);
   }
 };
 
-export const createStand = async (req, res) => {
+export const createStand = async (req, res, next) => {
   try {
     const newStand = await standService.createStand(req.body);
     res.status(201).json(newStand);
   } catch (error) {
-    res.status(500).json({ error: "Error al crear el stand" });
+    next(error);
   }
 };
 
-export const updateStand = async (req, res) => {
+export const updateStand = async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
+    if (isNaN(id)) {
+      return res.status(400).json({ mensaje: "El ID del stand debe ser numérico." });
+    }
     const updatedStand = await standService.updateStand(id, req.body);
     res.json(updatedStand);
   } catch (error) {
-    if (error.message.includes("El artesano debe estar APROBADO") || error.message.includes("El artesano no existe")) {
-      return res.status(400).json({ error: error.message });
-    }
-    res.status(500).json({ error: "Error al actualizar el stand o no existe" });
+    next(error);
   }
 };
 
-export const deleteStand = async (req, res) => {
+export const deleteStand = async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
+    if (isNaN(id)) {
+      return res.status(400).json({ mensaje: "El ID del stand debe ser numérico." });
+    }
     await standService.deleteStand(id);
     res.status(204).send();
   } catch (error) {
-    res.status(500).json({ error: "Error al eliminar el stand o no existe" });
+    next(error);
   }
 };

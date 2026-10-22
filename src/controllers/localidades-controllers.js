@@ -1,39 +1,45 @@
 import * as localidadService from '../services/localidades-services.js';
 
-export const getLocalidades = async (req, res) => {
+export const getLocalidades = async (req, res, next) => {
   try {
     const localidades = await localidadService.getAllLocalidades();
     res.json(localidades);
   } catch (error) {
-    res.status(500).json({ error: "Error al obtener localidades" });
+    next(error);
   }
 };
 
-export const createLocalidad = async (req, res) => {
+export const createLocalidad = async (req, res, next) => {
   try {
     const newLocalidad = await localidadService.createLocalidad(req.body);
     res.status(201).json(newLocalidad);
   } catch (error) {
-    res.status(500).json({ error: "Error al crear la localidad" });
+    next(error);
   }
 };
 
-export const updateLocalidad = async (req, res) => {
+export const updateLocalidad = async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
+    if (isNaN(id)) {
+      return res.status(400).json({ mensaje: "El ID de la localidad debe ser numérico." });
+    }
     const updatedLocalidad = await localidadService.updateLocalidad(id, req.body);
     res.json(updatedLocalidad);
   } catch (error) {
-    res.status(500).json({ error: "Error al actualizar la localidad o no existe" });
+    next(error);
   }
 };
 
-export const deleteLocalidad = async (req, res) => {
+export const deleteLocalidad = async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
+    if (isNaN(id)) {
+      return res.status(400).json({ mensaje: "El ID de la localidad debe ser numérico." });
+    }
     await localidadService.deleteLocalidad(id);
     res.status(204).send();
   } catch (error) {
-    res.status(500).json({ error: "Error al eliminar la localidad o no existe" });
+    next(error);
   }
 };

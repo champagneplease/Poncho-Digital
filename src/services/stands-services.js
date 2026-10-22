@@ -45,9 +45,15 @@ export const updateStand = async (id, data) => {
   if (data.artesanoId !== undefined) {
     if (data.artesanoId !== null) {
       const artesano = await prisma.artesano.findUnique({ where: { id: data.artesanoId } });
-      if (!artesano) throw new Error("El artesano no existe");
+      if (!artesano) {
+        const error = new Error("El artesano no existe.");
+        error.status = 400;
+        throw error;
+      }
       if (artesano.estado !== "APROBADO") {
-        throw new Error("El artesano debe estar APROBADO para asignarle un stand");
+        const error = new Error("El artesano debe estar APROBADO para asignarle un stand.");
+        error.status = 400;
+        throw error;
       }
       data.estado = "ocupado";
     } else {
