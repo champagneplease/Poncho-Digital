@@ -5,45 +5,47 @@ import { prisma } from "../config/db.js";
 
 export { validateSchema, validarEsquema } from "./zod-validator.js";
 
+const responderAuth = (res, status, authHeader, mensaje) => {
+  res.set("WWW-Authenticate", authHeader);
+  return res.status(status).json({ mensaje });
+};
+
 export const autenticarUsuario = async (req, res, next) => {
   const encabezado = req.get("Authorization");
   if (!encabezado) {
-    res.set("WWW-Authenticate", "Bearer");
-    return res.status(401).json({ mensaje: "Se requiere un token de acceso." });
+    return responderAuth(res, 401, "Bearer", "Se requiere un token de acceso.");
   }
 
-  const coincidencia = /^Bearer +(\S+)$/i.exec(encabezado);
-  if (!coincidencia) {
-    res.set("WWW-Authenticate", 'Bearer error="invalid_request"');
-    return res.status(400).json({ mensaje: "Usar Authorization: Bearer <token>." });
+  const [, token] = /^Bearer +(\S+)$/i.exec(encabezado) || [];
+  if (!token) {
+    return responderAuth(res, 400, 'Bearer error="invalid_request"', "Usar Authorization: Bearer <token>.");
   }
 
   try {
-    const payload = verificarToken(coincidencia[1]);
-    if (await tokenEstaRevocado(payload.jti)) {
-      throw new jwt.JsonWebTokenError("Token revocado.");
-    }
+    const payload = verificarToken(token);
+    const revocado = await tokenEstaRevocado(payload.jti);
+    if (revocado) throw new jwt.JsonWebTokenError("Token revocado.");
+
     req.usuario = payload;
+    return next();
   } catch (error) {
-    if (!(error instanceof jwt.JsonWebTokenError)) {
-      return next(error);
-    }
-    res.set("WWW-Authenticate", 'Bearer error="invalid_token"');
-    return res.status(401).json({ mensaje: "Token inválido, vencido o revocado." });
+    return error instanceof jwt.JsonWebTokenError
+      ? responderAuth(res, 401, 'Bearer error="invalid_token"', "Token inválido, vencido o revocado.")
+      : next(error);
   }
-  return next();
 };
 
 export const autenticarArtesano = autenticarUsuario;
 
 export const cargarContextoCuenta = async (req, res, next) => {
   try {
-    if (!req.usuario?.id) {
+    const id = req.usuario?.id;
+    if (!id) {
       return res.status(401).json({ mensaje: "No hay sesión autenticada." });
     }
 
     const usuario = await prisma.usuario.findUnique({
-      where: { id: req.usuario.id },
+      where: { id },
       include: { artesano: true }
     });
 
@@ -51,18 +53,14 @@ export const cargarContextoCuenta = async (req, res, next) => {
       return res.status(401).json({ mensaje: "La cuenta ya no existe." });
     }
 
-    if (usuario.activo === false) {
+    if (!usuario.activo) {
       return res.status(403).json({ mensaje: "Cuenta desactivada. Acceso prohibido." });
     }
 
     req.contextoUsuario = usuario;
     req.usuario = {
       ...req.usuario,
-      id: usuario.id,
-      nombre: usuario.nombre,
-      email: usuario.email,
-      rol: usuario.rol,
-      activo: usuario.activo,
+      ...usuario,
       artesanoId: usuario.artesano?.id || null
     };
 
@@ -72,14 +70,12 @@ export const cargarContextoCuenta = async (req, res, next) => {
   }
 };
 
-export const autorizarRoles = (...rolesPermitidos) => {
-  return (req, res, next) => {
-    const rolActual = req.contextoUsuario?.rol || req.usuario?.rol;
-    if (!rolActual || !rolesPermitidos.includes(rolActual)) {
-      return res.status(403).json({
-        mensaje: `Acceso prohibido. Se requiere uno de los siguientes roles: ${rolesPermitidos.join(", ")}.`
-      });
-    }
-    next();
-  };
+export const autorizarRoles = (...rolesPermitidos) => (req, res, next) => {
+  const rol = req.contextoUsuario?.rol || req.usuario?.rol;
+  if (!rolesPermitidos.includes(rol)) {
+    return res.status(403).json({
+      mensaje: `Acceso prohibido. Se requiere uno de los siguientes roles: ${rolesPermitidos.join(", ")}.`
+    });
+  }
+  next();
 };
