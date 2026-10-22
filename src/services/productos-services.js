@@ -13,43 +13,50 @@ export const getProductoById = async (id) => {
   });
 };
 
+export const getMisProductos = async (artesanoId) => {
+  return await prisma.producto.findMany({
+    where: { artesanoId },
+    include: { artesano: true }
+  });
+};
+
 export const createProducto = async (data) => {
   return await prisma.producto.create({ data });
 };
 
 export const updateProducto = async (id, data, artesanoId) => {
-  const producto = await prisma.producto.findUnique({ where: { id } });
-  if (!producto) {
-    const error = new Error("Producto no encontrado");
+  // Modificar filtra por id y por el propietario en la misma consulta del servicio
+  const resultado = await prisma.producto.updateMany({
+    where: {
+      id,
+      artesanoId
+    },
+    data
+  });
+
+  // Producto ajeno o inexistente -> 404 con el mismo mensaje según rúbrica
+  if (resultado.count === 0) {
+    const error = new Error("Producto no encontrado.");
     error.status = 404;
     throw error;
   }
 
-  if (artesanoId && producto.artesanoId && producto.artesanoId !== artesanoId) {
-    const error = new Error("No tienes permiso para modificar este producto.");
-    error.status = 403;
-    throw error;
-  }
-
-  return await prisma.producto.update({
-    where: { id },
-    data
-  });
+  return await prisma.producto.findUnique({ where: { id } });
 };
 
 export const deleteProducto = async (id, artesanoId) => {
-  const producto = await prisma.producto.findUnique({ where: { id } });
-  if (!producto) {
-    const error = new Error("Producto no encontrado");
+  // Eliminar filtra por id y por el propietario en la misma consulta del servicio
+  const resultado = await prisma.producto.deleteMany({
+    where: {
+      id,
+      artesanoId
+    }
+  });
+
+  // Producto ajeno o inexistente -> 404 con el mismo mensaje según rúbrica
+  if (resultado.count === 0) {
+    const error = new Error("Producto no encontrado.");
     error.status = 404;
     throw error;
   }
-
-  if (artesanoId && producto.artesanoId && producto.artesanoId !== artesanoId) {
-    const error = new Error("No tienes permiso para eliminar este producto.");
-    error.status = 403;
-    throw error;
-  }
-
-  return await prisma.producto.delete({ where: { id } });
 };

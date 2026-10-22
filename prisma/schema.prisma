@@ -1,14 +1,39 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+enum Rol {
+  ADMINISTRADOR
+  ARTESANO
+  POSTULANTE
+}
+
+enum EstadoSolicitud {
+  PENDIENTE
+  APROBADA
+  RECHAZADA
+}
+
+model Usuario {
+  id           String     @id @default(uuid()) @db.Uuid
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  nombre       String
+  email        String     @unique
+  passwordHash String
+  rol          Rol        @default(ARTESANO)
+  activo       Boolean    @default(true)
+  ultimoAcceso DateTime?
+
+  artesano     Artesano?
+  solicitudes  Solicitud[]
 }
 
 model Localidad {
@@ -30,23 +55,36 @@ model Ubicacion {
 }
 
 model Artesano {
-  id           String     @id @default(uuid()) @db.Uuid
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  id           String      @id @default(uuid()) @db.Uuid
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
   nombre       String
   apellido     String?
   telefono     String?
-  estado       String     @default("PENDIENTE")
+  estado       String      @default("PENDIENTE")
+
+  usuarioId    String?     @unique @db.Uuid
+  usuario      Usuario?    @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
   localidadId  Int?
-  localidad    Localidad? @relation(fields: [localidadId], references: [id])
+  localidad    Localidad?  @relation(fields: [localidadId], references: [id])
   productos    Producto[]
   stand        Stand?
-  
-  // --- Autenticación ---
-  email        String     @unique
-  passwordHash String
-  activo       Boolean    @default(true)
-  ultimoAcceso DateTime?
+  solicitudes  Solicitud[]
+}
+
+model Solicitud {
+  id          Int             @id @default(autoincrement())
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  estado      EstadoSolicitud @default(PENDIENTE)
+  motivo      String?
+
+  usuarioId   String          @db.Uuid
+  usuario     Usuario         @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  artesanoId  String?         @db.Uuid
+  artesano    Artesano?       @relation(fields: [artesanoId], references: [id], onDelete: Cascade)
 }
 
 model Producto {
@@ -56,7 +94,7 @@ model Producto {
   nombre      String
   precio      Float
   artesanoId  String?   @db.Uuid 
-  artesano    Artesano? @relation(fields: [artesanoId], references: [id])
+  artesano    Artesano? @relation(fields: [artesanoId], references: [id], onDelete: Cascade)
 }
 
 model Stand {
