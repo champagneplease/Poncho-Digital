@@ -43,7 +43,6 @@ export const iniciarSesion = async (dto) => {
     include: { artesano: true }
   });
   
-  // Email inexistente o contraseña incorrecta: 401 con mensaje genérico
   if (!usuario) {
     const error = new Error("Las credenciales son inválidas.");
     error.status = 401;
@@ -57,7 +56,6 @@ export const iniciarSesion = async (dto) => {
     throw error;
   }
 
-  // Cuenta inactiva: 401 con el mensaje genérico según rúbrica
   if (usuario.activo === false) {
     const error = new Error("Las credenciales son inválidas.");
     error.status = 401;

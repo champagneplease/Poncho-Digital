@@ -25,7 +25,6 @@ export const createProducto = async (data) => {
 };
 
 export const updateProducto = async (id, data, artesanoId) => {
-  // Modificar filtra por id y por el propietario en la misma consulta del servicio
   const resultado = await prisma.producto.updateMany({
     where: {
       id,
@@ -34,7 +33,6 @@ export const updateProducto = async (id, data, artesanoId) => {
     data
   });
 
-  // Producto ajeno o inexistente -> 404 con el mismo mensaje según rúbrica
   if (resultado.count === 0) {
     const error = new Error("Producto no encontrado.");
     error.status = 404;
@@ -45,7 +43,6 @@ export const updateProducto = async (id, data, artesanoId) => {
 };
 
 export const deleteProducto = async (id, artesanoId) => {
-  // Eliminar filtra por id y por el propietario en la misma consulta del servicio
   const resultado = await prisma.producto.deleteMany({
     where: {
       id,
@@ -53,7 +50,6 @@ export const deleteProducto = async (id, artesanoId) => {
     }
   });
 
-  // Producto ajeno o inexistente -> 404 con el mismo mensaje según rúbrica
   if (resultado.count === 0) {
     const error = new Error("Producto no encontrado.");
     error.status = 404;

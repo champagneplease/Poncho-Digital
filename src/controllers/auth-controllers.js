@@ -41,7 +41,6 @@ export const logout = async (req, res, next) => {
   }
 };
 
-// Criterio 2.5: Ruta protegida GET /me
 export const getPerfilMe = async (req, res, next) => {
   try {
     const usuario = await authService.obtenerPerfilMe(req.usuario.id);
@@ -51,7 +50,6 @@ export const getPerfilMe = async (req, res, next) => {
   }
 };
 
-// Criterio 6: Postulación pública de artesano
 export const postular = async (req, res, next) => {
   try {
     const resultado = await authService.postularArtesano(req.body);
@@ -64,7 +62,6 @@ export const postular = async (req, res, next) => {
   }
 };
 
-// Criterio 6: Resolución de solicitud (Solo Admin)
 export const resolverSolicitud = async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
@@ -91,7 +88,6 @@ export const listarSolicitudes = async (req, res, next) => {
   }
 };
 
-// Criterio 7: Gestión de cuentas (Solo Admin)
 export const crearAdmin = async (req, res, next) => {
   try {
     const nuevoAdmin = await authService.crearAdministrador(req.body);

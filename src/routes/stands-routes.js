@@ -10,11 +10,8 @@ import { standSchema } from '../schemas/validations.js';
 
 const router = Router();
 
-// Consulta pública
 router.get('/', getStands);
 
-// Rutas protegidas solo para ADMINISTRADOR
-// Orden en la ruta: autenticación -> cuenta -> rol -> validación -> controlador
 router.post(
   '/',
   autenticarUsuario,

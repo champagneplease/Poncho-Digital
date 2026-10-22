@@ -2,12 +2,11 @@ import bcrypt from 'bcryptjs';
 import { prisma } from '../src/config/db.js';
 
 async function main() {
-  console.log('🌱 Iniciando carga de datos iniciales (Seed)...');
+  console.log('Iniciando carga de datos...');
 
   const passwordAdminHash = await bcrypt.hash('Admin1234#', 10);
   const passwordArtesanoHash = await bcrypt.hash('Artesano1234#', 10);
 
-  // 1. Crear Administrador inicial
   const admin = await prisma.usuario.upsert({
     where: { email: 'admin@poncho.gob.ar' },
     update: {},
@@ -19,9 +18,8 @@ async function main() {
       activo: true
     }
   });
-  console.log('✅ Administrador creado:', admin.email);
+  console.log('Admin creado:', admin.email);
 
-  // 2. Crear Localidad
   const localidad = await prisma.localidad.upsert({
     where: { id: 1 },
     update: {},
@@ -31,7 +29,6 @@ async function main() {
     }
   });
 
-  // 3. Crear Ubicación
   const ubicacion = await prisma.ubicacion.upsert({
     where: { id: 1 },
     update: {},
@@ -41,7 +38,6 @@ async function main() {
     }
   });
 
-  // 4. Crear Usuario Artesano con perfil vinculado
   const usuarioArtesano = await prisma.usuario.upsert({
     where: { email: 'artesano@poncho.gob.ar' },
     update: {},
@@ -66,9 +62,8 @@ async function main() {
       localidadId: localidad.id
     }
   });
-  console.log('✅ Artesano creado:', usuarioArtesano.email);
+  console.log('Artesano creado:', usuarioArtesano.email);
 
-  // 5. Crear Stand
   await prisma.stand.upsert({
     where: { id: 1 },
     update: { artesanoId: artesano.id, estado: 'ocupado' },
@@ -80,7 +75,6 @@ async function main() {
     }
   });
 
-  // 6. Crear Producto de prueba
   const productoExistente = await prisma.producto.findFirst({
     where: { artesanoId: artesano.id, nombre: 'Poncho de Vicuña Catamarqueño' }
   });
@@ -95,12 +89,12 @@ async function main() {
     });
   }
 
-  console.log('🎉 Seed completado exitosamente.');
+  console.log('Carga de datos completada.');
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Error en seed:', e);
+    console.error('Error en seed:', e);
     process.exit(1);
   })
   .finally(async () => {

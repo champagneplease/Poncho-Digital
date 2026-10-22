@@ -3,9 +3,8 @@ import { z } from "zod";
 export const registrarUsuarioSchema = z.object({
   nombre: z.string().trim().min(2, "Debe tener al menos 2 caracteres."),
   email: z.string().email("El email no tiene un formato válido."),
-  // La contraseña no se recorta con trim() según rúbrica
   password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres.")
-}).strict(); // strict() impide inyectar rol o campos internos
+}).strict();
 
 export const registrarArtesanoSchema = registrarUsuarioSchema;
 

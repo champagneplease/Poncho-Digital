@@ -25,7 +25,6 @@ export const getProductoById = async (req, res, next) => {
   }
 };
 
-// Listado propio sin parámetros del cliente
 export const getMisProductos = async (req, res, next) => {
   try {
     const artesanoId = req.usuario.artesanoId;
@@ -41,7 +40,6 @@ export const getMisProductos = async (req, res, next) => {
 
 export const createProducto = async (req, res, next) => {
   try {
-    // El artesano del alta sale de la cuenta autenticada, nunca del body
     const artesanoId = req.usuario.artesanoId;
     if (!artesanoId) {
       return res.status(403).json({ mensaje: "Debes tener un perfil de artesano habilitado para publicar productos." });

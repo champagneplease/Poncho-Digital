@@ -19,15 +19,11 @@ import { postulacionSchema } from '../schemas/auth-validations.js';
 
 const router = Router();
 
-// Consultas públicas
 router.get('/', getArtesanos);
 router.get('/:id', getArtesanoById);
 
-// Postulación pública
 router.post('/postulacion', validateSchema(postulacionSchema), postular);
 
-// Endpoints protegidos para ADMINISTRADOR
-// Orden: autenticación -> cuenta -> rol -> validación -> controlador
 router.post(
   '/',
   autenticarUsuario,

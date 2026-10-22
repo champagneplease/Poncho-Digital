@@ -5,7 +5,6 @@ import { prisma } from "../config/db.js";
 
 export { validateSchema, validarEsquema } from "./zod-validator.js";
 
-// Middleware 2.4: Autenticación básica mediante JWT
 export const autenticarUsuario = async (req, res, next) => {
   const encabezado = req.get("Authorization");
   if (!encabezado) {
@@ -24,7 +23,6 @@ export const autenticarUsuario = async (req, res, next) => {
     if (await tokenEstaRevocado(payload.jti)) {
       throw new jwt.JsonWebTokenError("Token revocado.");
     }
-    // Deja req.usuario según especificación de la rúbrica
     req.usuario = payload;
   } catch (error) {
     if (!(error instanceof jwt.JsonWebTokenError)) {
@@ -38,7 +36,6 @@ export const autenticarUsuario = async (req, res, next) => {
 
 export const autenticarArtesano = autenticarUsuario;
 
-// Middleware 2: Contexto de la cuenta (verifica existencia y estado activo)
 export const cargarContextoCuenta = async (req, res, next) => {
   try {
     if (!req.usuario?.id) {
@@ -58,7 +55,6 @@ export const cargarContextoCuenta = async (req, res, next) => {
       return res.status(403).json({ mensaje: "Cuenta desactivada. Acceso prohibido." });
     }
 
-    // Deja el contexto completo vigente en req.contextoUsuario y enriquece req.usuario
     req.contextoUsuario = usuario;
     req.usuario = {
       ...req.usuario,
@@ -76,7 +72,6 @@ export const cargarContextoCuenta = async (req, res, next) => {
   }
 };
 
-// Middleware 3: Autorización por rol reutilizable
 export const autorizarRoles = (...rolesPermitidos) => {
   return (req, res, next) => {
     const rolActual = req.contextoUsuario?.rol || req.usuario?.rol;

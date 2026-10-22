@@ -3,9 +3,9 @@ import { secretoJWT } from "../config/jwt.js";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 
-export const generarToken = (artesano) => {
+export const generarToken = (usuario) => {
   return jwt.sign(
-    { sub: artesano.id, jti: randomUUID() },
+    { sub: usuario.id, jti: randomUUID() },
     secretoJWT,
     { algorithm: "HS256", expiresIn: "15m" }
   );
@@ -17,7 +17,7 @@ export const verificarToken = (token) => {
   if (
     typeof payload !== "object" || 
     payload === null || 
-    !z.string().uuid().safeParse(payload.sub).success || // Valida formato UUID
+    !z.string().uuid().safeParse(payload.sub).success ||
     !Number.isFinite(payload.exp)
   ) {
     throw new jwt.JsonWebTokenError("Contenido del token inválido.");

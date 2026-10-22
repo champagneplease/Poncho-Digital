@@ -18,12 +18,10 @@ import {
 
 const router = Router();
 
-// Rutas públicas
 router.post("/registro", validateSchema(registrarUsuarioSchema), registrar);
 router.post("/login", validateSchema(iniciarSesionSchema), login);
 router.post("/postulacion", validateSchema(postulacionSchema), postular);
 
-// Rutas protegidas por JWT
 router.post("/logout", autenticarUsuario, logout);
 router.get("/me", autenticarUsuario, getPerfilMe);
 

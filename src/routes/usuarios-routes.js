@@ -17,8 +17,6 @@ import {
 
 const router = Router();
 
-// Rutas protegidas exclusivamente para ADMINISTRADOR
-// Orden: autenticación -> cuenta -> rol -> validación -> controlador
 router.get(
   '/',
   autenticarUsuario,

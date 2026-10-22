@@ -13,8 +13,6 @@ import { resolverSolicitudSchema } from '../schemas/auth-validations.js';
 
 const router = Router();
 
-// Rutas protegidas solo para ADMINISTRADOR
-// Orden: autenticación -> cuenta -> rol -> validación -> controlador
 router.get(
   '/',
   autenticarUsuario,

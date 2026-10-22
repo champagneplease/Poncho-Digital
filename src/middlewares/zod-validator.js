@@ -12,7 +12,6 @@ export const validateSchema = (schema) => {
       });
     }
 
-    // Se sincroniza la información limpia y tipada tanto en req.body como en req.dtoValidado
     req.body = result.data;
     req.dtoValidado = result.data;
     next();
