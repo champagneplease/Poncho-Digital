@@ -1,0 +1,453 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
+    "name": "Poncho Digital - API Completa",
+    "description": "Colección completa para Poncho Digital: Autenticación, Roles (RBAC), Postulación de Artesanos, Productos (Anti-IDOR), Stands con filtros, Localidades y Ubicaciones.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000", "type": "string" },
+    { "key": "adminToken", "value": "", "type": "string" },
+    { "key": "adminId", "value": "", "type": "string" },
+    { "key": "artesanoToken", "value": "", "type": "string" },
+    { "key": "postulanteToken", "value": "", "type": "string" },
+    { "key": "solicitudId", "value": "1", "type": "string" },
+    { "key": "artesanoId", "value": "", "type": "string" },
+    { "key": "auxAdminId", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "1. Autenticación y Perfil",
+      "item": [
+        {
+          "name": "1.1 Login Admin (Guarda adminToken)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var json = pm.response.json();",
+                  "    pm.collectionVariables.set('adminToken', json.token);",
+                  "    if (json.usuario && json.usuario.id) {",
+                  "        pm.collectionVariables.set('adminId', json.usuario.id);",
+                  "    }",
+                  "    pm.test('Token de admin obtenido y guardado', function () {",
+                  "        pm.expect(json.token).to.be.a('string');",
+                  "        pm.expect(json.usuario.rol).to.eql('ADMINISTRADOR');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@poncho.gob.ar\",\n  \"password\": \"Admin1234#\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "1.2 Consultar Perfil Propio (GET /me)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/auth/me", "host": ["{{baseUrl}}"], "path": ["auth", "me"] }
+          }
+        },
+        {
+          "name": "1.3 Login Artesano Inicial (Guarda artesanoToken)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var json = pm.response.json();",
+                  "    pm.collectionVariables.set('artesanoToken', json.token);",
+                  "    if (json.usuario.artesanoId) {",
+                  "        pm.collectionVariables.set('artesanoId', json.usuario.artesanoId);",
+                  "    }",
+                  "    pm.test('Token de artesano obtenido y guardado', function () {",
+                  "        pm.expect(json.token).to.be.a('string');",
+                  "        pm.expect(json.usuario.rol).to.eql('ARTESANO');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"artesano@poncho.gob.ar\",\n  \"password\": \"Artesano1234#\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Postulación y Resolución de Solicitudes",
+      "item": [
+        {
+          "name": "2.1 Postulación Pública de Artesano",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.solicitud && json.solicitud.id) {",
+                  "        pm.collectionVariables.set('solicitudId', json.solicitud.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Mariana\",\n  \"apellido\": \"Sosa\",\n  \"email\": \"mariana@artesanias.com\",\n  \"password\": \"Password123#\",\n  \"telefono\": \"+54 383 4556677\",\n  \"localidadId\": 1,\n  \"motivo\": \"Cerámica tradicional y alfarería catamarqueña\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/postulacion", "host": ["{{baseUrl}}"], "path": ["auth", "postulacion"] }
+          }
+        },
+        {
+          "name": "2.2 Login Postulante (Guarda postulanteToken)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var json = pm.response.json();",
+                  "    pm.collectionVariables.set('postulanteToken', json.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"mariana@artesanias.com\",\n  \"password\": \"Password123#\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "2.3 [DEBE DAR 403] Postulante intenta crear producto",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{postulanteToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Vasija de Prueba\",\n  \"precio\": 20000\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/productos", "host": ["{{baseUrl}}"], "path": ["productos"] }
+          }
+        },
+        {
+          "name": "2.4 Admin lista solicitudes",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/solicitudes", "host": ["{{baseUrl}}"], "path": ["solicitudes"] }
+          }
+        },
+        {
+          "name": "2.5 Admin APRUEBA solicitud",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"APROBADA\",\n  \"motivo\": \"Documentación de taller verificada\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/solicitudes/{{solicitudId}}", "host": ["{{baseUrl}}"], "path": ["solicitudes", "{{solicitudId}}"] }
+          }
+        },
+        {
+          "name": "2.6 [DEBE DAR 409] Resolver solicitud ya resuelta",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"RECHAZADA\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/solicitudes/{{solicitudId}}", "host": ["{{baseUrl}}"], "path": ["solicitudes", "{{solicitudId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Productos (Rol Artesano y Anti-IDOR)",
+      "item": [
+        {
+          "name": "3.1 Crear Producto Propio (Artesano)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{artesanoToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Paila de Cobre Artesanal\",\n  \"precio\": 55000\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/productos", "host": ["{{baseUrl}}"], "path": ["productos"] }
+          }
+        },
+        {
+          "name": "3.2 Listar Mis Productos (Propio)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{artesanoToken}}" }],
+            "url": { "raw": "{{baseUrl}}/productos/mis-productos", "host": ["{{baseUrl}}"], "path": ["productos", "mis-productos"] }
+          }
+        },
+        {
+          "name": "3.3 Listar Todos los Productos (Público)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/productos", "host": ["{{baseUrl}}"], "path": ["productos"] }
+          }
+        },
+        {
+          "name": "3.4 [DEBE DAR 404] Modificar producto ajeno o inexistente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{artesanoToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"precio\": 99999\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/productos/999999", "host": ["{{baseUrl}}"], "path": ["productos", "999999"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Stands (Gestión y Asignación Admin)",
+      "item": [
+        {
+          "name": "4.1 [DEBE DAR 403] Artesano intenta crear Stand",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{artesanoToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ubicacionId\": 1\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/stands", "host": ["{{baseUrl}}"], "path": ["stands"] }
+          }
+        },
+        {
+          "name": "4.2 Admin crea Stand",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ubicacionId\": 1,\n  \"coordenadas\": \"-28.4680,-65.7790\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/stands", "host": ["{{baseUrl}}"], "path": ["stands"] }
+          }
+        },
+        {
+          "name": "4.3 Admin asigna Stand a Artesano",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"artesanoId\": \"{{artesanoId}}\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/stands/1", "host": ["{{baseUrl}}"], "path": ["stands", "1"] }
+          }
+        },
+        {
+          "name": "4.4 Listar Stands con Filtros (Público)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/stands?estado=disponible&page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["stands"],
+              "query": [
+                { "key": "estado", "value": "disponible" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Gestión de Cuentas (Solo Admin)",
+      "item": [
+        {
+          "name": "5.1 Admin crea nuevo Administrador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.id) {",
+                  "        pm.collectionVariables.set('auxAdminId', json.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Admin Auxiliar\",\n  \"email\": \"admin_aux@poncho.gob.ar\",\n  \"password\": \"AdminAux1234#\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/usuarios/admin", "host": ["{{baseUrl}}"], "path": ["usuarios", "admin"] }
+          }
+        },
+        {
+          "name": "5.2 Admin lista todas las cuentas",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/usuarios", "host": ["{{baseUrl}}"], "path": ["usuarios"] }
+          }
+        },
+        {
+          "name": "5.3 Admin desactiva cuenta auxiliar (PATCH /usuarios/:id/activo)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activo\": false\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/usuarios/{{auxAdminId}}/activo", "host": ["{{baseUrl}}"], "path": ["usuarios", "{{auxAdminId}}", "activo"] }
+          }
+        },
+        {
+          "name": "5.4 [DEBE DAR 409] Desactivar el único administrador activo",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activo\": false\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/usuarios/{{adminId}}/activo", "host": ["{{baseUrl}}"], "path": ["usuarios", "{{adminId}}", "activo"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Consultas Públicas (Artesanos, Localidades, Ubicaciones)",
+      "item": [
+        {
+          "name": "6.1 Listar Artesanos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/artesanos", "host": ["{{baseUrl}}"], "path": ["artesanos"] }
+          }
+        },
+        {
+          "name": "6.2 Listar Localidades",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/localidades", "host": ["{{baseUrl}}"], "path": ["localidades"] }
+          }
+        },
+        {
+          "name": "6.3 Listar Ubicaciones",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/ubicaciones", "host": ["{{baseUrl}}"], "path": ["ubicaciones"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Logout y Revocación de Tokens",
+      "item": [
+        {
+          "name": "7.1 Cerrar Sesión (Logout)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{artesanoToken}}" }],
+            "url": { "raw": "{{baseUrl}}/auth/logout", "host": ["{{baseUrl}}"], "path": ["auth", "logout"] }
+          }
+        },
+        {
+          "name": "7.2 [DEBE DAR 401] Usar token revocado tras logout",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{artesanoToken}}" }],
+            "url": { "raw": "{{baseUrl}}/productos/mis-productos", "host": ["{{baseUrl}}"], "path": ["productos", "mis-productos"] }
+          }
+        }
+      ]
+    }
+  ]
+}

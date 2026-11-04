@@ -1,0 +1,3659 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Poncho Digital API",
+    "description": "Documentación oficial de la API de Poncho Digital. Gestión de artesanos, productos, stands y postulaciones para la Fiesta Nacional e Internacional del Poncho.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor local de desarrollo"
+    }
+  ],
+  "paths": {
+    "/auth/registro": {
+      "post": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Registrar un nuevo usuario artesano",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Usuario artesano registrado exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos en el cuerpo de la solicitud",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Ya existe un usuario registrado con ese email",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistroInput"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistroInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Iniciar sesión y obtener token JWT",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Credenciales verificadas y token generado exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Formato de datos inválido en la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciales incorrectas o cuenta inactiva",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginInput"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/postulacion": {
+      "post": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Registrar postulación pública de artesano",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Postulación registrada en estado pendiente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostulacionResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostulacionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos de postulación incompletos o inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Ya existe una cuenta registrada con ese email",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostulacionInput"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/PostulacionInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Cerrar sesión revocando el token de acceso actual",
+        "description": "",
+        "responses": {
+          "204": {
+            "description": "Sesión cerrada y token revocado con éxito"
+          },
+          "400": {
+            "description": "Cabecera Authorization mal formada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autenticado o token inválido/revocado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Obtener el perfil de la cuenta autenticada",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Datos del perfil de usuario y artesano asociado si existe",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PerfilMeResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/PerfilMeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cabecera Authorization mal formada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autenticado o token inválido/revocado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/solicitudes": {
+      "get": {
+        "tags": [
+          "Solicitudes"
+        ],
+        "summary": "Listar solicitudes de artesanos pendientes y resueltas (solo administradores)",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista completa de solicitudes de postulación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SolicitudResponse"
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SolicitudResponse"
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cabecera Authorization mal formada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autenticado o token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Acceso prohibido. Se requiere rol ADMINISTRADOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/solicitudes/{id}": {
+      "patch": {
+        "tags": [
+          "Solicitudes"
+        ],
+        "summary": "Aprobar o rechazar una solicitud de postulación de artesano",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "minimum": 1,
+            "description": "ID numérico de la solicitud"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Solicitud resuelta exitosamente (APROBADA o RECHAZADA)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResolverSolicitudResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResolverSolicitudResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ID no numérico o estado no válido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autenticado o token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Acceso prohibido. Se requiere rol ADMINISTRADOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Solicitud no encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "La solicitud ya fue resuelta previamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResolverSolicitudInput"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/ResolverSolicitudInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/usuarios": {
+      "get": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Listar todos los usuarios del sistema (solo administradores)",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista completa de usuarios",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UsuarioResponse"
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UsuarioResponse"
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cabecera Authorization mal formada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autenticado o token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Acceso prohibido. Se requiere rol ADMINISTRADOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/usuarios/admin": {
+      "post": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Crear un nuevo usuario con rol ADMINISTRADOR",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Administrador creado con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos en el cuerpo de la petición",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autenticado o token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Acceso prohibido. Se requiere rol ADMINISTRADOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Ya existe un usuario con ese email",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearAdminInput"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearAdminInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/usuarios/{id}/activo": {
+      "patch": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Activar o desactivar una cuenta de usuario",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "format": "uuid",
+            "description": "Identificador único UUID del usuario"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Estado de la cuenta actualizado exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos o ID no válido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autenticado o token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Acceso prohibido. Se requiere rol ADMINISTRADOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuario no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "No se puede desactivar al único administrador activo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CambiarEstadoCuentaInput"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/CambiarEstadoCuentaInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stands": {
+      "get": {
+        "tags": [
+          "Stands"
+        ],
+        "summary": "Listar stands con filtros y paginación",
+        "description": "",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "minimum": 1,
+            "default": 1,
+            "description": "Número de página para paginación",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 10,
+            "description": "Cantidad de stands por página",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "estado",
+            "in": "query",
+            "description": "Filtrar por estado del stand (ej: disponible, ocupado)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pabellon",
+            "in": "query",
+            "description": "Filtrar por nombre del pabellón",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "localidad",
+            "in": "query",
+            "description": "Filtrar por nombre de localidad del artesano",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listado paginado de stands",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandPaginadoResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandPaginadoResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "tags": [
+          "Stands"
+        ],
+        "summary": "Crear un nuevo stand en el predio (solo administradores)",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Stand creado exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos o ubicación inexistente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autenticado o token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Acceso prohibido. Se requiere rol ADMINISTRADOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StandInput"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/StandInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stands/{id}": {
+      "put": {
+        "tags": [
+          "Stands"
+        ],
+        "summary": "Actualizar datos de un stand (solo administradores)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "minimum": 1,
+            "description": "ID numérico del stand"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Stand actualizado con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ID no numérico o datos inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autenticado o token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Acceso prohibido. Se requiere rol ADMINISTRADOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Stand no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StandUpdateInput"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/StandUpdateInput"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Stands"
+        ],
+        "summary": "Eliminar un stand existente (solo administradores)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "minimum": 1,
+            "description": "ID numérico del stand"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Stand eliminado exitosamente"
+          },
+          "400": {
+            "description": "El ID del stand debe ser numérico",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autenticado o token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Acceso prohibido. Se requiere rol ADMINISTRADOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Stand no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/artesanos": {
+      "get": {
+        "tags": [
+          "Artesanos"
+        ],
+        "summary": "Listar todos los artesanos registrados",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista de artesanos con sus localidades, stands y productos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ArtesanoResponse"
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ArtesanoResponse"
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "tags": [
+          "Artesanos"
+        ],
+        "summary": "Crear un nuevo perfil de artesano",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Perfil de artesano creado exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArtesanoResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArtesanoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos en el cuerpo de la solicitud",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autenticado o token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Acceso prohibido. Se requiere rol ADMINISTRADOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ArtesanoInput"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/ArtesanoInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/artesanos/{id}": {
+      "get": {
+        "tags": [
+          "Artesanos"
+        ],
+        "summary": "Obtener artesano por su identificador UUID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "format": "uuid",
+            "description": "Identificador UUID del artesano"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Datos del artesano encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArtesanoResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArtesanoResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Artesano no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      },
+      "put": {
+        "tags": [
+          "Artesanos"
+        ],
+        "summary": "Actualizar datos de un artesano",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "format": "uuid",
+            "description": "Identificador UUID del artesano"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Artesano actualizado con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArtesanoResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArtesanoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autenticado o token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Acceso prohibido. Se requiere rol ADMINISTRADOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Artesano no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ArtesanoUpdateInput"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/ArtesanoUpdateInput"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Artesanos"
+        ],
+        "summary": "Eliminar un artesano",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "format": "uuid",
+            "description": "Identificador UUID del artesano"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Artesano eliminado exitosamente"
+          },
+          "400": {
+            "description": "ID inválido o cabecera mal formada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autenticado o token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Acceso prohibido. Se requiere rol ADMINISTRADOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Artesano no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/artesanos/postulacion": {
+      "post": {
+        "tags": [
+          "Artesanos"
+        ],
+        "summary": "Registrar postulación pública de artesano (alias)",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Postulación registrada en estado pendiente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostulacionResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostulacionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos de postulación inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Email ya registrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostulacionInput"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/PostulacionInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/artesanos/{id}/estado": {
+      "patch": {
+        "tags": [
+          "Artesanos"
+        ],
+        "summary": "Actualizar estado de aprobación de un artesano",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "format": "uuid",
+            "description": "Identificador UUID del artesano"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Estado del artesano actualizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArtesanoResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArtesanoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Estado inválido. Debe ser PENDIENTE, APROBADO o RECHAZADO",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autenticado o token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Acceso prohibido. Se requiere rol ADMINISTRADOR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Artesano no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ArtesanoEstadoInput"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/ArtesanoEstadoInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/productos": {
+      "get": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Listar todos los productos disponibles",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista de productos con información de su artesano",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductoResponse"
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductoResponse"
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Publicar un nuevo producto artesanal (solo artesanos)",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Producto creado exitosamente asociado al artesano autenticado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductoResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos del producto inválidos o campos no permitidos presentes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autenticado o token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Acceso prohibido. Requiere rol ARTESANO con perfil habilitado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductoInput"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductoInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/productos/mis-productos": {
+      "get": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Listar productos pertenecientes al artesano autenticado",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista de productos propios del artesano",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductoResponse"
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductoResponse"
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cabecera Authorization mal formada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autenticado o token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Acceso prohibido. Se requiere rol ARTESANO",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/productos/{id}": {
+      "get": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Obtener un producto por su ID numérico",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "minimum": 1,
+            "description": "ID numérico del producto"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Producto encontrado con sus datos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductoResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "El ID del producto debe ser numérico",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Producto no encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      },
+      "put": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Actualizar un producto propio del artesano autenticado",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "minimum": 1,
+            "description": "ID numérico del producto"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Producto actualizado con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductoResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ID no numérico o datos de actualización inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autenticado o token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Acceso prohibido. Requiere rol ARTESANO",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Producto no encontrado o no pertenece al artesano autenticado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductoUpdateInput"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductoUpdateInput"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Eliminar un producto propio del artesano autenticado",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "minimum": 1,
+            "description": "ID numérico del producto"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Producto eliminado exitosamente"
+          },
+          "400": {
+            "description": "El ID del producto debe ser numérico",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autenticado o token inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Acceso prohibido. Requiere rol ARTESANO",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Producto no encontrado o no pertenece al artesano autenticado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/localidades": {
+      "get": {
+        "tags": [
+          "Localidades"
+        ],
+        "summary": "Listar todas las localidades",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista de localidades",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LocalidadResponse"
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LocalidadResponse"
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "tags": [
+          "Localidades"
+        ],
+        "summary": "Crear una localidad",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Localidad creada con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocalidadResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocalidadResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LocalidadInput"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/LocalidadInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/localidades/{id}": {
+      "put": {
+        "tags": [
+          "Localidades"
+        ],
+        "summary": "Actualizar una localidad",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la localidad"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Localidad actualizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocalidadResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocalidadResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LocalidadUpdateInput"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/LocalidadUpdateInput"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Localidades"
+        ],
+        "summary": "Eliminar una localidad",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la localidad"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Localidad eliminada"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security": []
+      }
+    },
+    "/ubicaciones": {
+      "get": {
+        "tags": [
+          "Ubicaciones"
+        ],
+        "summary": "Listar todas las ubicaciones",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista de ubicaciones",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UbicacionResponse"
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UbicacionResponse"
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "tags": [
+          "Ubicaciones"
+        ],
+        "summary": "Crear una ubicación",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Ubicación creada con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UbicacionResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/UbicacionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UbicacionInput"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/UbicacionInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ubicaciones/{id}": {
+      "put": {
+        "tags": [
+          "Ubicaciones"
+        ],
+        "summary": "Actualizar una ubicación",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la ubicación"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ubicación actualizada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UbicacionResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/UbicacionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorApi"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UbicacionUpdateInput"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/UbicacionUpdateInput"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Ubicaciones"
+        ],
+        "summary": "Eliminar una ubicación",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID de la ubicación"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Ubicación eliminada"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Ingrese el token JWT obtenido tras autenticarse en POST /auth/login. En Swagger UI, pegue únicamente el valor del token."
+      }
+    },
+    "schemas": {
+      "ErrorApi": {
+        "type": "object",
+        "properties": {
+          "mensaje": {
+            "type": "string",
+            "example": "Los datos enviados son inválidos."
+          },
+          "errores": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "campo": {
+                  "type": "string",
+                  "example": "nombre"
+                },
+                "mensaje": {
+                  "type": "string",
+                  "example": "El nombre del producto es obligatorio"
+                }
+              },
+              "required": [
+                "campo",
+                "mensaje"
+              ]
+            }
+          }
+        },
+        "required": [
+          "mensaje"
+        ],
+        "example": {
+          "mensaje": "Los datos enviados son inválidos.",
+          "errores": [
+            {
+              "campo": "nombre",
+              "mensaje": "El nombre del producto es obligatorio"
+            }
+          ]
+        }
+      },
+      "RegistroInput": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "minLength": 2
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8
+          }
+        },
+        "required": [
+          "nombre",
+          "email",
+          "password"
+        ],
+        "additionalProperties": false
+      },
+      "LoginInput": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "PostulacionInput": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "minLength": 2
+          },
+          "apellido": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8
+          },
+          "telefono": {
+            "type": "string"
+          },
+          "localidadId": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 9007199254740991
+          },
+          "motivo": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "nombre",
+          "email",
+          "password"
+        ],
+        "additionalProperties": false
+      },
+      "CrearAdminInput": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "minLength": 2
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8
+          }
+        },
+        "required": [
+          "nombre",
+          "email",
+          "password"
+        ],
+        "additionalProperties": false
+      },
+      "CambiarEstadoCuentaInput": {
+        "type": "object",
+        "properties": {
+          "activo": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "activo"
+        ],
+        "additionalProperties": false
+      },
+      "ResolverSolicitudInput": {
+        "type": "object",
+        "properties": {
+          "estado": {
+            "type": "string",
+            "enum": [
+              "APROBADA",
+              "RECHAZADA"
+            ]
+          },
+          "motivo": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "estado"
+        ],
+        "additionalProperties": false
+      },
+      "ProductoInput": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "minLength": 2
+          },
+          "precio": {
+            "type": "number",
+            "minimum": 0,
+            "exclusiveMinimum": true
+          }
+        },
+        "required": [
+          "nombre",
+          "precio"
+        ],
+        "additionalProperties": false
+      },
+      "ProductoUpdateInput": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "minLength": 2
+          },
+          "precio": {
+            "type": "number",
+            "minimum": 0,
+            "exclusiveMinimum": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ArtesanoInput": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "minLength": 2
+          },
+          "apellido": {
+            "type": "string",
+            "minLength": 2
+          },
+          "telefono": {
+            "type": "string"
+          },
+          "localidadId": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "nombre",
+          "apellido"
+        ],
+        "additionalProperties": false
+      },
+      "ArtesanoUpdateInput": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "minLength": 2
+          },
+          "apellido": {
+            "type": "string",
+            "minLength": 2
+          },
+          "telefono": {
+            "type": "string"
+          },
+          "localidadId": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 9007199254740991
+          }
+        },
+        "additionalProperties": false
+      },
+      "ArtesanoEstadoInput": {
+        "type": "object",
+        "properties": {
+          "estado": {
+            "type": "string",
+            "enum": [
+              "PENDIENTE",
+              "APROBADO",
+              "RECHAZADO"
+            ]
+          }
+        },
+        "required": [
+          "estado"
+        ],
+        "additionalProperties": false
+      },
+      "StandInput": {
+        "type": "object",
+        "properties": {
+          "coordenadas": {
+            "type": "string"
+          },
+          "ubicacionId": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 9007199254740991
+          },
+          "artesanoId": {
+            "nullable": true,
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "exclusiveMinimum": true,
+                "maximum": 9007199254740991
+              }
+            ]
+          }
+        },
+        "required": [
+          "ubicacionId"
+        ],
+        "additionalProperties": false
+      },
+      "StandUpdateInput": {
+        "type": "object",
+        "properties": {
+          "coordenadas": {
+            "type": "string"
+          },
+          "ubicacionId": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 9007199254740991
+          },
+          "artesanoId": {
+            "nullable": true,
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "exclusiveMinimum": true,
+                "maximum": 9007199254740991
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "LocalidadInput": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "minLength": 2
+          },
+          "provincia": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "nombre"
+        ],
+        "additionalProperties": false
+      },
+      "LocalidadUpdateInput": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "minLength": 2
+          },
+          "provincia": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UbicacionInput": {
+        "type": "object",
+        "properties": {
+          "pabellon": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sector": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "pabellon",
+          "sector"
+        ],
+        "additionalProperties": false
+      },
+      "UbicacionUpdateInput": {
+        "type": "object",
+        "properties": {
+          "pabellon": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sector": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      },
+      "UsuarioResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+          },
+          "nombre": {
+            "type": "string",
+            "example": "Juan Pérez"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "artesano@poncho.gob.ar"
+          },
+          "rol": {
+            "type": "string",
+            "enum": [
+              "ADMINISTRADOR",
+              "ARTESANO",
+              "POSTULANTE"
+            ],
+            "example": "ARTESANO"
+          },
+          "activo": {
+            "type": "boolean",
+            "example": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-07-15T14:30:00.000Z"
+          },
+          "ultimoAcceso": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "nombre",
+          "email",
+          "rol",
+          "activo",
+          "createdAt"
+        ]
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "mensaje": {
+            "type": "string",
+            "example": "Credenciales verificadas correctamente."
+          },
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "usuario": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "nombre": {
+                "type": "string",
+                "example": "Juan Pérez"
+              },
+              "email": {
+                "type": "string",
+                "format": "email",
+                "example": "artesano@poncho.gob.ar"
+              },
+              "rol": {
+                "type": "string",
+                "example": "ARTESANO"
+              },
+              "artesanoId": {
+                "type": "string",
+                "format": "uuid",
+                "nullable": true
+              }
+            },
+            "required": [
+              "id",
+              "nombre",
+              "email",
+              "rol"
+            ]
+          }
+        },
+        "required": [
+          "mensaje",
+          "token",
+          "usuario"
+        ]
+      },
+      "PostulacionResponse": {
+        "type": "object",
+        "properties": {
+          "mensaje": {
+            "type": "string",
+            "example": "Postulación registrada correctamente. Estado pendiente de aprobación."
+          },
+          "usuario": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "nombre": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string",
+                "format": "email"
+              },
+              "rol": {
+                "type": "string",
+                "example": "POSTULANTE"
+              }
+            },
+            "required": [
+              "id",
+              "nombre",
+              "email",
+              "rol"
+            ]
+          },
+          "artesano": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "estado": {
+                "type": "string",
+                "example": "PENDIENTE"
+              }
+            },
+            "required": [
+              "id",
+              "estado"
+            ]
+          },
+          "solicitud": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "example": 1
+              },
+              "estado": {
+                "type": "string",
+                "example": "PENDIENTE"
+              }
+            },
+            "required": [
+              "id",
+              "estado"
+            ]
+          }
+        },
+        "required": [
+          "mensaje",
+          "usuario",
+          "artesano",
+          "solicitud"
+        ]
+      },
+      "PerfilMeResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "nombre": {
+            "type": "string",
+            "example": "Juan Pérez"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "artesano@poncho.gob.ar"
+          },
+          "rol": {
+            "type": "string",
+            "example": "ARTESANO"
+          },
+          "activo": {
+            "type": "boolean",
+            "example": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ultimoAcceso": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "artesano": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "nombre": {
+                "type": "string"
+              },
+              "apellido": {
+                "type": "string",
+                "nullable": true
+              },
+              "telefono": {
+                "type": "string",
+                "nullable": true
+              },
+              "estado": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "required": [
+          "id",
+          "nombre",
+          "email",
+          "rol",
+          "activo",
+          "createdAt"
+        ]
+      },
+      "ProductoResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "nombre": {
+            "type": "string",
+            "example": "Poncho de Vicuña"
+          },
+          "precio": {
+            "type": "number",
+            "example": 850000
+          },
+          "artesanoId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "nombre",
+          "precio"
+        ]
+      },
+      "ArtesanoResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+          },
+          "nombre": {
+            "type": "string",
+            "example": "Juan"
+          },
+          "apellido": {
+            "type": "string",
+            "nullable": true,
+            "example": "Poncho"
+          },
+          "telefono": {
+            "type": "string",
+            "nullable": true,
+            "example": "+54 383 4123456"
+          },
+          "estado": {
+            "type": "string",
+            "enum": [
+              "PENDIENTE",
+              "APROBADO",
+              "RECHAZADO"
+            ],
+            "example": "APROBADO"
+          },
+          "usuarioId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "localidadId": {
+            "type": "integer",
+            "nullable": true,
+            "example": 1
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "nombre",
+          "estado"
+        ]
+      },
+      "StandResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "estado": {
+            "type": "string",
+            "example": "disponible"
+          },
+          "coordenadas": {
+            "type": "string",
+            "nullable": true,
+            "example": "-28.4689,-65.7795"
+          },
+          "ubicacionId": {
+            "type": "integer",
+            "example": 1
+          },
+          "artesanoId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "estado",
+          "ubicacionId"
+        ]
+      },
+      "StandPaginadoResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StandResponse"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "integer",
+                "example": 25
+              },
+              "paginaActual": {
+                "type": "integer",
+                "example": 1
+              },
+              "limite": {
+                "type": "integer",
+                "example": 10
+              },
+              "totalPaginas": {
+                "type": "integer",
+                "example": 3
+              }
+            },
+            "required": [
+              "total",
+              "paginaActual",
+              "limite",
+              "totalPaginas"
+            ]
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "SolicitudResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "estado": {
+            "type": "string",
+            "enum": [
+              "PENDIENTE",
+              "APROBADA",
+              "RECHAZADA"
+            ],
+            "example": "PENDIENTE"
+          },
+          "motivo": {
+            "type": "string",
+            "nullable": true,
+            "example": "Tejeduría tradicional calchaquí"
+          },
+          "usuarioId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "artesanoId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "estado",
+          "usuarioId"
+        ]
+      },
+      "ResolverSolicitudResponse": {
+        "type": "object",
+        "properties": {
+          "mensaje": {
+            "type": "string",
+            "example": "Solicitud aprobada con éxito."
+          },
+          "solicitud": {
+            "$ref": "#/components/schemas/SolicitudResponse"
+          }
+        },
+        "required": [
+          "mensaje",
+          "solicitud"
+        ]
+      },
+      "LocalidadResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "nombre": {
+            "type": "string",
+            "example": "San Fernando del Valle de Catamarca"
+          },
+          "provincia": {
+            "type": "string",
+            "nullable": true,
+            "example": "Catamarca"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "nombre"
+        ]
+      },
+      "UbicacionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "pabellon": {
+            "type": "string",
+            "example": "Pabellón Artesanías Tradicionales"
+          },
+          "sector": {
+            "type": "string",
+            "example": "Sector A"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "pabellon",
+          "sector"
+        ]
+      }
+    }
+  }
+}

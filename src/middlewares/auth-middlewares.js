@@ -29,9 +29,10 @@ export const autenticarUsuario = async (req, res, next) => {
     req.usuario = payload;
     return next();
   } catch (error) {
-    return error instanceof jwt.JsonWebTokenError
-      ? responderAuth(res, 401, 'Bearer error="invalid_token"', "Token inválido, vencido o revocado.")
-      : next(error);
+    if (error instanceof jwt.JsonWebTokenError || error instanceof SyntaxError) {
+      return responderAuth(res, 401, 'Bearer error="invalid_token"', "Token inválido, vencido o revocado.");
+    }
+    return next(error);
   }
 };
 
